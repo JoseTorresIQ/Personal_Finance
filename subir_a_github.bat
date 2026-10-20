@@ -8,23 +8,20 @@ echo    FINANZFLOW - SUBIR TODOS LOS ARCHIVOS A GITHUB
 echo ======================================================================
 echo.
 
-:: 1. Verificar o configurar el repositorio remoto
+set TARGET_REPO=https://github.com/JoseTorresIQ/Personal_Finance.git
+
+:: 1. Verificar y asegurar el repositorio remoto de GitHub
 echo [1/3] Verificando repositorio remoto de GitHub...
 git remote get-url origin >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo   No hay repositorio remoto configurado.
-    set /p REPO_URL="  Ingresa la URL de tu repositorio GitHub (ej: https://github.com/usuario/repo.git): "
-    if "%REPO_URL%"=="" (
-        echo   [!] Operacion cancelada: No se proporciono URL.
-        pause
-        exit /b 1
-    )
-    git remote add origin %REPO_URL%
+    echo   Configurando repositorio remoto inicial: %TARGET_REPO%
+    git remote add origin %TARGET_REPO%
+) else (
+    git remote set-url origin %TARGET_REPO%
 )
 
-for /f "tokens=*" %%u in ('git remote get-url origin 2^>nul') do set CURRENT_REMOTE=%%u
-echo   Destino remoto: %CURRENT_REMOTE%
+set CURRENT_REMOTE=%TARGET_REPO%
+echo   Destino remoto configurado: %CURRENT_REMOTE%
 
 :: 2. Agregar TODOS los archivos al control de versiones (nuevos, modificados y eliminados)
 echo.
